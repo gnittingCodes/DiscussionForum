@@ -1,0 +1,96 @@
+<style>
+    .form-container {
+        display: inline-block; 
+        max-width: 400px; 
+        max-height: 400px; 
+        overflow: auto; 
+        padding: 20px;
+        border: 2px solid #ccc;
+        border-radius: 10px;
+    }
+
+    .input-container {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+
+    label {
+        width: 120px;
+        margin-right: px;
+    }
+
+    input[type="text"],
+    input[type="password"] {
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 16px;
+        width: 100%;
+        outline: none;
+    }
+
+    input[type="submit"] {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+        /* background-color: #4CAF50; */
+        background-color: #277598;
+        color: #fff;
+        cursor: pointer;
+    }
+
+    input[type="submit"]:hover {
+        /* background-color: #45a049; */
+        background-color: #23527c;
+
+    }
+    .error-message {
+        background-color: #F8D7DA;
+        color: #721C24;
+        border: 1px solid #F5C6CB;
+
+        margin: 10px auto; 
+        padding: 10px;
+        border-radius: 5px;
+        width: fit-content;
+        text-align: center; 
+    }
+
+    .existing-account-message {
+        margin-top: 10px;
+        font-size: 14px;
+
+    }
+</style>
+
+<h1>USYD's CS Website Login</h1>
+
+<div class="form-container">
+    <br>
+    <form action="/login" method="post">
+        <div class="input-container">
+            <label for="username">Username:</label>
+            <input id="username" name="username" type="text" required/>
+        </div>
+
+        <div class="input-container">
+            <label for="password">Password:</label>
+            <input id="password" name="password" type="password"required />
+        </div>
+
+        <input id="login-btn" value="Login" type="submit" />
+        
+        <!-- Error message section -->
+        {% if error_message %}
+            <div class="error-message">
+                {{ error_message }}
+            </div>
+        {% endif %}
+    </form>
+    
+    <div class="existing-account-message">
+        Don't have an account yet? <a href="/register">Register here</a>.
+    </div>
+</div>

@@ -1,0 +1,52 @@
+
+<link rel="stylesheet" type="text/css" href="css/tutorialnotes.css">
+
+<h1>Tutorial Notes</h1>
+
+<!-- {% for note in notes %}
+<section>
+    <h2 class="section-heading">{{ note.section_heading }}</h2>
+    <ul class="file-list">
+        <li class="file-item">
+            <a href="{{ note.file_link }}" download class="file-link">{{ note.file_name }}</a>
+        </li>
+    </ul>
+</section>
+{% endfor %} -->
+
+
+<style>
+
+  .download-icon {
+    margin-left: 10px; 
+  }
+  
+</style>
+
+
+{% set sections = {} %}
+{% for note in notes %}
+  {% if note.section_heading not in sections %}
+    {% set _ = sections.update({note.section_heading: [note]}) %}
+  {% else %}
+    {% set _ = sections[note.section_heading].append(note) %}
+  {% endif %}
+{% endfor %}
+
+{% for section_heading, section_notes in sections.items() %}
+  <section>
+    <h2 class="section-heading">{{ section_heading }}</h2>
+    <ul class="file-list">
+      {% for note in section_notes %}
+      <li class="file-item">
+        <a href="{{ note.file_link }}" download class="file-link">
+          {{ note.file_name }}
+          <i class="fas fa-download download-icon"></i>
+        </a>
+      </li>
+      
+      {% endfor %}
+    </ul>
+  </section>
+{% endfor %}
+

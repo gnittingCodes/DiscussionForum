@@ -1,0 +1,404 @@
+
+<style>
+
+    .custom-btn {
+        background-color: #2f6a8f;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        font-size: 16px;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    .custom-btn:hover {
+        background-color: #23527c;
+    }
+
+    .create-post-btn:hover {
+        background-color: #23527c;
+    }
+
+    .edit-btn {
+        background-color: #277598;
+        color: white;
+        border: none;
+        padding: 10px 16px;
+        font-size: 14px;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    .edit-btn:hover {
+        background-color: #23527c;
+    }
+
+    .delete-btn {
+        background-color: #b3183a;
+        color: white;
+        border: none;
+        padding: 10px 16px;
+        font-size: 14px;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    .delete-btn:hover {
+        background-color: #892238; 
+    }
+
+    .user-id {
+        font-size: 14px;
+        color: #777;
+    }
+
+
+    * {
+        box-sizing: border-box;
+    }
+
+    #editPopup {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        height: 80%;
+        width: 80%;
+        padding: 20px;
+        background-color: #fff;
+        border: 1px solid #ccc;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        z-index: 9999;
+    }
+
+
+    /* .popup-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding-top: 15px;
+        position: relative; 
+    } */
+
+  .popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 300px;
+    padding: 20px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    z-index: 9999;
+  }
+
+  .popup-content {
+    text-align: center;
+  }
+
+  .popup-buttons {
+    margin-top: 20px;
+    text-align: center;
+  }
+  .centered-input {
+    display: flex;
+    justify-content: center;
+  }
+
+    textarea {
+        resize: none;
+        font-family: sans-serif;
+    }
+
+    .buttons {
+        display: flex;
+        justify-content: space-evenly;
+    }
+
+
+    /* .search-bar {
+    text-align: center;
+    margin-bottom: 20px;
+    } */
+
+    .search-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 10px;
+    }
+
+    #searchInput {
+        margin-right: 10px;
+        padding: 8px;
+        font-size: 16px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+
+    /*  */
+
+    .post-list {
+        flex: 1;
+        padding-right: 20px;
+        display: flex;
+    }
+
+    .container {
+        display: flex;
+        flex-direction: row;
+        /* margin-bottom: 5px; */
+    }
+
+    .post-list .post-item {
+        background-color: #f2f2f2;
+        padding: 10px;
+        margin-bottom: 20px;
+        border-radius: 8px;
+        cursor: pointer;
+    }
+
+    .post-details {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center; 
+    }
+
+    .post-details h2 {
+        font-size: 20px;
+        margin-bottom: 5px; 
+        margin-top: 0; 
+    }
+
+    #selected-post {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start; 
+        height: 100%;
+        margin-top: 5px; 
+        text-align: center; 
+    }
+
+    /* for scroll for list of posts */
+    .post-list-header {
+        height: 90%;
+        overflow-y: auto;
+        width: 40%;
+        margin-bottom: 10px;
+    }
+
+</style>
+
+<h2 style="font-size: 24px; color: #336699; font-family: Arial, sans-serif;">Knowledge Repository</h2>
+<div class="search-bar">
+    <div class="search-container">
+      <i class="fas fa-search search-icon"style="margin-right:5px;"></i>
+      <input type="text" id="searchInput" placeholder="Search..." onkeyup="searchPosts()">
+    </div>
+</div>
+
+<div class="container">
+    <div class="post-list">
+
+        <!-- LEFT SIDE OF PAGE: LIST OF POSTS -->
+        <div class="post-list-header">
+        
+
+            <h2 class="post-list-title">Posts</h2>
+            
+            <a href="/post" class="create-post-btn">
+                <button class="custom-btn">
+                  <i class="fas fa-plus" style="margin-right:5px;"></i>
+                  Create new post
+                </button>
+              </a>
+
+            <br><br>
+            {% for post in posts %}
+            <div class="post-item" onclick="showPost('{{ post.title }}', '{{ post.content }}', '{{ post.username }}')">
+                <h3 class="post-title">{{ post.title }}</h3>
+                <p class="post-user">Posted by: {{ post.username }}</p>
+                <p class="post-content" style="display: none;">{{ post.content }}</p>
+
+                <div class="buttons">
+                    {% if post.username == username %}
+                    <button class="edit-btn" data-note-id="{{ post.post_id }}"><i class="fas fa-edit" style="margin-right:5px;"></i>Edit</button>
+                    
+                    {% endif %} 
+                    {% if username == 'admin' or post.username == username %}
+                    <button class="delete-btn" data-note-id="{{ post.post_id }}"><i class="fas fa-trash" style="margin-right:5px;"></i>Delete</button>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- divider line -->
+        <div class="post-list-divider"></div>
+        <!-- RIGHT SIDE OF PAGE: SELECTED POST -->
+        <div class="post-details">
+            <h2>Selected Post</h2>
+            <div id="selected-post" class="no-post-selected">Please select a post</div>
+        </div>
+
+
+    </div>
+</div>
+
+
+
+<!-- modal for delete pop up -->
+<div class="popup" id="deletePopup" style="display: none;">
+    <div class="popup-content">
+        <h3>Confirm Delete</h3>
+        <p>Are you sure you want to delete this post?</p>
+    </div>
+    <div class="popup-buttons">
+        <button id="cancelDeleteButton" class="custom-btn">Cancel</button>
+        <button id="confirmDeleteButton" class="delete-btn">Confirm</button>
+    </div>
+</div>
+
+
+<!-- modal for edit pop up -->
+<div class="popup" id="editPopup" style="display: none;">
+    <div class="popup-content">
+        <h3>Edit Post</h3>
+        <p>Enter new title:</p>
+        <input type="text" id="newTitle" placeholder="Enter new title" />
+
+        <p>Enter new content:</p>
+        <textarea id="newContent" placeholder="Enter new content"></textarea>
+    </div>
+    <div class="popup-buttons">
+        <button id="cancelEditButton" class="custom-btn">Cancel</button>
+        <button id="confirmEditButton" class="edit-btn">Confirm</button>
+    </div>
+</div>
+
+
+
+<script>
+
+
+// var existingTitle = "Existing Title";
+//   var existingContent = "Existing Content";
+
+//   // Set the placeholders with existing data
+//   document.getElementById("newTitle").placeholder = existingTitle;
+//   document.getElementById("newContent").placeholder = existingContent;
+
+
+    function searchPosts() {
+        var input = document.getElementById('searchInput');
+        var filter = input.value.toLowerCase();
+        var postItems = document.getElementsByClassName('post-item');
+
+        for (var postItem of postItems) {
+            var title = postItem.getElementsByClassName('post-title')[0].innerHTML.toLowerCase();
+            var content = postItem.getElementsByClassName('post-content')[0].innerHTML.toLowerCase();
+            var user = postItem.getElementsByClassName('post-user')[0].innerHTML.toLowerCase();
+
+            if (title.includes(filter) || content.includes(filter) || user.includes(filter)) {
+                postItem.style.display = '';
+            } else {
+                postItem.style.display = 'none';
+            }
+        }
+    }
+
+
+    var editButtons = document.querySelectorAll('.edit-btn');
+    editButtons.forEach(function(button) {
+        button.addEventListener('click', function(event) {
+        var postId = event.target.getAttribute('data-note-id');
+        
+        var popup = document.getElementById('editPopup');
+        popup.style.display = 'block';
+  
+        // cancel button 
+        var cancelButton = document.getElementById('cancelEditButton');
+        cancelButton.addEventListener('click', function() {
+          popup.style.display = 'none';
+        });
+  
+        // save button 
+        var saveButton = document.getElementById('confirmEditButton');
+        saveButton.addEventListener('click', function() {
+          var newTitle = document.getElementById('newTitle').value;
+          var newContent = document.getElementById('newContent').value;
+          if (newTitle || newContent) {
+
+            editPost(newTitle, newContent, postId);
+            window.location.reload();
+          }
+          popup.style.display = 'none';
+        });
+      });
+    });
+
+
+    function editPost(newTitle, newContent, postId) {
+
+        fetch('/edit-post', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            title: newTitle,
+            content: newContent,
+            postId: postId,
+        }),
+        })
+    }
+
+    var deleteButtons = document.querySelectorAll('.delete-btn');
+        deleteButtons.forEach(function(button) {
+        button.addEventListener('click', function(event) {
+        var postId = event.target.getAttribute('data-note-id');
+
+        var popup = document.getElementById('deletePopup');
+        popup.style.display = 'block';
+
+
+        var cancelButton = document.getElementById('cancelDeleteButton');
+        cancelButton.addEventListener('click', function() {
+          popup.style.display = 'none';
+        });
+
+
+        var deleteButton = document.getElementById('confirmDeleteButton');
+        deleteButton.addEventListener('click', function() {
+          // delete action
+          deleteNote(postId);
+          window.location.reload();
+          popup.style.display = 'none';
+        });
+      });
+    }); 
+
+    function deleteNote(postId) {
+
+        fetch('/delete-post', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            postId: postId
+        }),
+        })
+    }
+
+    function showPost(title, content, username) {
+        var postDetails = document.getElementById("selected-post");
+        postDetails.innerHTML = "<h3>" + title + "</h3><p>" + content + "</p><p>Posted by: " + username + "</p>";
+    }
+    
+</script>

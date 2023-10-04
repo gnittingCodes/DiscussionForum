@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Course Guide</title>
+  
+  <style>
+    .section-title {
+      position: sticky;
+      top: 0;
+      background-color: #f2f2f2;
+      padding: 10px;
+      cursor: pointer;
+      font-size: 18px;
+      font-weight: bold;
+      margin-top: 10px;
+      margin-bottom: 10px;
+      text-align: left;
+    }
+    .section-title::after {
+      content: "\25BC";
+      float: right;
+      font-weight: bold;
+      margin-right: 10px;
+    }
+    .section-title.open::after {
+      content: "\25B2";
+    } 
+    .section-content {
+      display: none;
+      padding: 10px;
+      max-height: 1000px;
+      overflow: hidden;
+      transition: max-height 0.3s ease;
+    }
+    .section-content.show {
+      display: block;
+    }
+
+    /* .section-title {
+      font-size: 18px;
+      font-weight: bold;
+      margin-top: 20px;
+      margin-bottom: 10px;
+      text-align: left;
+    } */
+
+    .objective-item::before {
+    counter-increment: objective-counter; 
+    content: counter(objective-counter) ". "; 
+  }
+
+.objectives-list {
+  list-style-type: none;
+  margin-left: 0;
+  padding-left: 0;
+  margin-bottom: 20px;
+  width: 100%;
+  text-align: left;
+  counter-reset: objective-counter; 
+}
+
+  .objectives-list {
+    /* list-style-position: inside; */
+  }
+  .container-course-guide {
+    width: 800px;
+    margin: 0 auto;
+  }
+
+
+  .overview {
+font-size: 16px;
+margin-bottom: 20px;
+/* width: 100%; */
+text-align: left;
+}
+  
+.objective-item {
+  margin-bottom: 5px;
+  width: 100%;
+}
+
+.topics-list {
+  list-style-type: disc; 
+  margin-left: 5;
+  padding-left: 0;
+  margin-bottom: 20px;
+  margin-top: 20px;
+  text-align: left;
+
+}
+
+.topic-item {
+  margin-bottom: 5px;
+  width: 100%;
+}
+
+
+
+
+.custom-btn {
+  background-color: #a09a9a;
+  color: #fff;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.add-btn {
+  background-color: #007bff;
+  color: #fff;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.add-btn:hover {
+  background-color: #0056b3;
+}
+.custom-btn:hover {
+    background-color: #616a6e;
+
+}
+
+p.overview {
+  display: flex;
+  align-items: flex-end;
+}
+
+textarea#overviewTextarea {
+    min-width: 500px;
+    min-height: 100px;
+    resize: vertical; 
+}
+
+#edit-button-overview {
+  margin-left: 10px;
+}
+
+.body-course-guide {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: -60px; 
+}
+
+.course-title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+
+.container-course-guide {
+    text-align: center;
+    max-width: 800px;
+    margin: 100px 100px; 
+    padding: 5px;
+    }
+
+
+    .popup-content {
+        display: flex;
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .popup-buttons {
+        margin-top: 20px;
+        text-align: center;
+    }
+
+    #editPopup {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        height: 80%;
+        width: 80%;
+        padding: 20px;
+        background-color: #fff;
+        border: 1px solid #ccc;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        z-index: 9999;
+    }
+
+    .edit-btn {
+        background-color: #277598;
+        color: white;
+        border: none;
+        padding: 10px 16px;
+        font-size: 14px;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    .edit-btn:hover {
+        background-color: #23527c;
+    }
+
+    .delete-btn2 {
+        background-color: #b3183a;
+        color: white;
+        border: none;
+        padding: 10px 16px;
+        font-size: 14px;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    .buttons {
+        display: flex;
+        justify-content: space-evenly;
+    }
+
+    .delete-btn2:hover {
+        background-color: #892238; 
+    }
+
+    .popup {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        height: 20%;
+        width: 30%;
+        padding: 20px;
+        background-color: #fff;
+        border: 1px solid #ccc;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        z-index: 9999;
+    }
+
+    .success-message {
+      display: none; 
+    background-color: #d4edda; 
+    color: #155724; 
+    padding: 10px;
+    margin-top: 10px;
+    border-radius: 4px;
+  }
+
+
+  </style>
+</head>
+
+
+<body>
+
+  <div class="course-guide">
+    <h1 class="course-title">{{ course_guide.title }}</h1>
+    <h3>Course Guide</h3>
+
+    <div class="body-course-guide">
+      <div class="container-course-guide">
+        {% if username == 'admin' %}
+        <h2>Admin Actions</h2>
+        <div class="edit-buttons">
+
+          <button class="add-btn" id="add-button-obj"><i class="fas fa-plus" style="margin-right:5px;"></i>Add New Objective</button>
+          <button class="add-btn" id="add-button-topic"><i class="fas fa-plus" style="margin-right:5px;"></i>Add New Topic</button>
+        </div>
+        {% endif %}
+        <h2 class="section-title">Overview</h2>
+        <div class="section-content">
+          <p class="overview">
+            {% if username == 'admin' %}
+
+            <textarea id="overviewTextarea">{{ course_guide.overview }}</textarea>
+            <button class="edit-btn" id="edit-button-overview" cg-overview-id="{{ course_guide.overview }}"><i class="fas fa-save" style="margin-right:5px;"></i>Save</button>
+            {% else %}
+            {{ course_guide.overview }}
+            {% endif %}
+          </p>
+
+          <div id="successMessage" class="success-message">Changes successfully updated!</div>
+
+        </div>
+        <h2 class="section-title">Objectives</h2>
+        <div class="section-content">
+          <ol class="objectives-list">
+            {% for objective in objectives %}
+            <li class="objective-item">
+              {% if username == 'admin' %}
+              <span>{{ objective.objective }}</span>
+              <button class="edit-btn" data-obj-id="{{ objective.id }}"><i class="fas fa-edit" style="margin-right:5px;"></i>Edit</button>
+              <button class="delete-btn2" data-obj-id="{{ objective.id }}"><i class="fas fa-trash" style="margin-right:5px;"></i>Delete</button>
+              {% else %}
+              {{ objective.objective }}
+              {% endif %}
+            </li>
+            {% endfor %}
+          </ol>
+        </div>
+        <h2 class="section-title">Topics</h2>
+        <div class="section-content">
+          <ol class="topics-list">
+            {% for topic in topics %}
+            <li class="topic-item">
+              {% if username == 'admin' %}
+              <span>{{ topic.topic }}</span>
+              <button class="edit-btn" data-topic-id="{{ topic.id }}"><i class="fas fa-edit" style="margin-right:5px;"></i>Edit</button>
+              <button class="delete-btn2" data-topic-id="{{ topic.id }}"><i class="fas fa-trash" style="margin-right:5px;"></i>Delete</button>
+              {% else %}
+              {{ topic.topic }}
+              {% endif %}
+            </li>
+            {% endfor %}
+          </ol>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+<!-- topic -->
+<!-- modal for delete pop up -->
+<div class="popup" id="deletePopup" style="display: none;">
+  <div class="popup-content">
+      <h3>Confirm Delete</h3>
+      <p>Are you sure you want to delete this topic?</p>
+  </div>
+  <div class="popup-buttons">
+      <button id="cancelDeleteButton" class="custom-btn">Cancel</button>
+      <button id="confirmDeleteButton" class="delete-btn">Confirm</button>
+  </div>
+</div>
+
+<!-- objective -->
+<!-- modal for delete pop up -->
+<div class="popup" id="deletePopupObj" style="display: none;">
+  <div class="popup-content">
+      <h3>Confirm Delete</h3>
+      <p>Are you sure you want to delete this objective?</p>
+  </div>
+  <div class="popup-buttons">
+      <button id="cancelDeleteButtonObj" class="custom-btn">Cancel</button>
+      <button id="confirmDeleteButtonObj" class="delete-btn">Confirm</button>
+  </div>
+</div>
+
+
+<!-- modal for edit pop up for topic-->
+<div class="popup" id="editPopupTopic" style="display: none;">
+  <div class="popup-content">
+      <h3>Edit Topic</h3>
+      <p>Enter new topic:</p>
+      <input type="text" id="newTopic"/>
+  </div>
+  <div class="popup-buttons">
+      <button id="cancelEditButton" class="custom-btn">Cancel</button>
+      <button id="confirmEditButton" class="edit-btn">Confirm</button>
+  </div>
+</div>
+
+
+<!-- modal for edit pop up for objective -->
+<div class="popup" id="editPopupObj" style="display: none;">
+  <div class="popup-content">
+      <h3>Edit Objective</h3>
+      <input type="text" id="newObj"/>
+  </div>
+  <div class="popup-buttons">
+      <button id="cancelEditButtonObj" class="custom-btn">Cancel</button>
+      <button id="confirmEditButtonObj" class="edit-btn">Confirm</button>
+  </div>
+</div>
+
+<!-- add new objective -->
+<div class="popup" id="addPopupObj" style="display: none;">
+  <div class="popup-content">
+      <h3>Add New Objective</h3>
+      <input type="text" id="newObjectiveInput" placeholder="Enter objective">
+  </div>
+  <div class="popup-buttons">
+      <button id="cancelAddButton" class="custom-btn">Cancel</button>
+      <button id="confirmAddButtonObj" class="add-btn">Add</button>
+  </div>
+</div>
+
+<!-- add new topic -->
+<div class="popup" id="addPopupTopic" style="display: none;">
+  <div class="popup-content">
+      <h3>Add New Topic</h3>
+      <input type="text" id="newTopicInput" placeholder="Enter topic">
+  </div>
+  <div class="popup-buttons">
+      <button id="cancelAddButtonTopic" class="custom-btn">Cancel</button>
+      <button id="confirmAddButtonTopic" class="add-btn">Add</button>
+  </div>
+</div>
+
+
+
+
+
+  <script>
+    // Add a click event listener to each section title
+    const sectionTitles = document.querySelectorAll('.section-title');
+    sectionTitles.forEach((title) => {
+      title.addEventListener('click', (event) => {
+        // Toggle the 'show' class on the section content
+        const sectionContent = event.target.nextElementSibling;
+        sectionContent.classList.toggle('show');
+        title.classList.toggle('open');
+
+      });
+    });
+
+    // var addButtons = document.querySelectorAll('.add-btn');
+    const addModalObj = document.getElementById("addPopupObj");
+    const addModalTopic = document.getElementById("addPopupTopic");
+    
+    const addButtonObj = document.getElementById("add-button-obj"); 
+    const addButtonTopic = document.getElementById("add-button-topic"); 
+    
+
+    var cancelButtonObj = document.getElementById('cancelAddButton');
+    cancelButtonObj.addEventListener('click', function() {
+        addModalObj.style.display = 'none';
+    });
+    var cancelButtonTopic = document.getElementById('cancelAddButtonTopic');
+    cancelButtonTopic.addEventListener('click', function() {
+        addModalTopic.style.display = 'none';
+    });
+
+
+    function showSuccessMessage() {
+    const successMessage = document.getElementById('successMessage');
+    successMessage.style.display = 'block';
+    successMessage.style.borderColor = 'green'; // Add green border color
+  }
+
+var saveButtonOverview = document.getElementById('edit-button-overview');
+var successMessage = document.getElementById('successMessage');
+
+saveButtonOverview.addEventListener('click', function() {
+    // Perform the save operation here
+
+    // Show the success message
+    successMessage.style.display = 'block';
+    successMessage.style.color = 'green';
+    successMessage.textContent = 'Changes successfully updated!';
+    showSuccessMessage();
+    // Hide the success message after a certain period of time (e.g., 3 seconds)
+    setTimeout(function() {
+        successMessage.style.display = 'none';
+    }, 4000);
+});
+
+
+
+    // the orginial add button, display the model
+    addButtonObj.addEventListener("click", function() {
+        addModalObj.style.display = "block";
+    });
+
+    addButtonTopic.addEventListener("click", function() {
+        addModalTopic.style.display = "block";
+    });
+
+    // confirm add button 
+    const confirmAddButtonObj = document.getElementById("confirmAddButtonObj");
+    confirmAddButtonObj.addEventListener("click", function() {
+        // Get the value from the input field
+        const objectiveInput = document.getElementById("newObjectiveInput").value;
+        addObj(objectiveInput);
+        window.location.reload();
+        addModalObj.style.display = "none";
+    });
+
+    const confirmAddButtonTopic = document.getElementById("confirmAddButtonTopic");
+    confirmAddButtonTopic.addEventListener("click", function() {
+        // Get the value from the input field
+        const topicInput = document.getElementById("newTopicInput").value;
+        addTopic(topicInput);
+        window.location.reload();
+        addModalTopic.style.display = "none";
+    });
+
+    function addObj(newObj) {
+        fetch('/add-objective', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            newObjective: newObj
+        }),
+        })
+    }
+
+    function addTopic(newTopic) {
+        fetch('/add-topic', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            newTopic: newTopic
+        }),
+        })
+    }
+
+
+var editButtons = document.querySelectorAll('.edit-btn');
+    editButtons.forEach(function(button) {
+        button.addEventListener('click', function(event) {
+        var topicId = event.target.getAttribute('data-topic-id');
+        var objId = event.target.getAttribute('data-obj-id');
+        var overview = event.target.getAttribute('cg-overview-id');
+        
+        var overviewContent = document.getElementById('overviewTextarea').value;
+        var popupTopic = document.getElementById('editPopupTopic');
+        var popupObj = document.getElementById('editPopupObj');
+        
+        if (overview) {
+            var data = {
+                overview: overviewContent
+            };
+            fetch('/edit-overview', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+        }
+       
+        if (topicId) {
+            popupTopic.style.display = 'block';
+        }
+        if (objId) {
+            popupObj.style.display = 'block';
+        }
+  
+        // cancel button 
+        var cancelButton = document.getElementById('cancelEditButton');
+        var cancelButtonObj = document.getElementById('cancelEditButtonObj');
+        cancelButton.addEventListener('click', function() {
+            popupTopic.style.display = 'none';
+        });
+        cancelButtonObj.addEventListener('click', function() {
+            popupObj.style.display = 'none';
+        });
+        
+        // save button 
+        var saveButton = document.getElementById('confirmEditButton');
+        var saveButtonObj = document.getElementById('confirmEditButtonObj');
+        
+        saveButton.addEventListener('click', function() {
+            var newTopic = document.getElementById('newTopic').value;
+            editTopic(newTopic, topicId);
+            window.location.reload();
+            popupTopic.style.display = 'none';
+        });
+
+        saveButtonObj.addEventListener('click', function() {
+            var newObj = document.getElementById('newObj').value;
+            editObj(newObj, objId);
+            window.location.reload();
+            popupObj.style.display = 'none';
+        });
+
+      
+        
+      });
+    });
+
+    function editTopic(newTopic, topicId) {
+        fetch('/edit-topic', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            topic: newTopic,
+            topicId: topicId,
+        }),
+        })
+    }
+
+    function editObj(newObj, objId) {
+        fetch('/edit-obj', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            objective: newObj,
+            objId: objId,
+        }),
+        })
+    }
+
+
+    var deleteButtons = document.querySelectorAll('.delete-btn2');
+    deleteButtons.forEach(function(button) {
+        button.addEventListener('click', function(event) {
+            var topicId = event.target.getAttribute('data-topic-id');
+            var objId = event.target.getAttribute('data-obj-id');
+
+            var popup = document.getElementById('deletePopup'); // topic
+            var popupObj = document.getElementById('deletePopupObj');
+            if (topicId) {
+                popup.style.display = 'block';
+            } 
+            if (objId) {
+                popupObj.style.display = 'block';
+            }
+
+            // same from 
+            var cancelButton = document.getElementById('cancelDeleteButton');
+            var cancelButtonObj = document.getElementById('cancelDeleteButtonObj');
+            cancelButton.addEventListener('click', function() {
+                popup.style.display = 'none';
+            });
+            cancelButtonObj.addEventListener('click', function() {
+                popupObj.style.display = 'none';
+            });
+
+            var deleteButton = document.getElementById('confirmDeleteButton');
+            deleteButton.addEventListener('click', function() {
+                // delete for topic 
+                deleteTopic(topicId);
+                window.location.reload();
+                popup.style.display = 'none';
+            });
+
+            var deleteButtonObj = document.getElementById('confirmDeleteButtonObj');
+            deleteButtonObj.addEventListener('click', function() {
+                // delete for objective
+                deleteObj(objId);
+                window.location.reload();
+                popup.style.display = 'none';
+            });
+        });
+    }); 
+
+    function deleteObj(objId) {
+        fetch('/delete-obj', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            objId: objId
+        }),
+        })
+    }
+
+    function deleteTopic(topicId) {
+        fetch('/delete-topic', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            topicId: topicId
+        }),
+        })
+    }
+
+    function toggleSectionContent(sectionId) {
+      var sectionContent = document.getElementById(sectionId);
+      sectionContent.style.display = sectionContent.style.display === "none" ? "block" : "none";
+
+      var sectionTitle = document.getElementById("title-" + sectionId);
+      sectionTitle.classList.toggle("open");
+    }
+
+  
+
+  </script>
+
+</body>
+</html>

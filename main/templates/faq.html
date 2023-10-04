@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="css/faq.css">
+
+</head>
+<body>
+    <h1 class="faq-heading">Frequently Asked Questions</h1>
+
+    <h3 class="faq-sec-heading">
+        <div class="faqmessage">
+        <p>
+            Do you have a question for our team?
+            Here are some of the most popular questions.
+            <br>
+            If you don't see your query answered below,
+            feel free to contact us
+            <a href="/contact">here</a>
+            <br>
+        </p>
+        </div>
+    </h3>
+
+    <section class="faq-section" id="faq">
+
+        <!-- question 1 -->
+        <div class="container" id="faq-c">
+            <h1 class="question">
+                <span class="collapse-icon"></span>
+                How do I log out of the platform?
+            </h1>
+            <div class="anscontainer">
+                <div class="answer">
+                    <p>Go to the navigation bar, and click "Log Out" which is positioned on the most right side.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <hr class="hr-line">
+
+        <!-- question 2 -->
+        <div class="container" id="faq-c">
+            <h1 class="question">
+                <span class="collapse-icon"></span>
+                How do I report a problem with the platform?
+            </h1>
+            <div class="anscontainer">
+                <div class="answer">
+                    <p>You can contact us <a href="/contact">here</a> here.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <hr class="hr-line">
+
+        <!-- question 3 -->
+        <div class="container" id="faq-c">
+            <h1 class="question">
+                <span class="collapse-icon"></span>
+                How do I send a message to a friend?
+            </h1>
+            <div class="anscontainer">
+                <div class="answer">
+                    <p> You can go to your Socials on the navigation bar, and view your friends list. You can proceed to chat with the person by clicking on the 'chat' button.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <hr class="hr-line">
+
+        <!-- question 4 -->
+        <div class="container" id="faq-c">
+            <h1 class="question">
+                <span class="collapse-icon"></span>
+                How do I share a resource to everyone?
+            </h1>
+            <div class="anscontainer">
+                <div class="answer">
+                    <p> Under the "Resources" section, you can click on "Knowledge Repository", and click on a "create a post" button to share.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        const questions = document.getElementsByClassName('question');
+        for (const question of questions) {
+            question.addEventListener('click', function() {
+                this.parentElement.classList.toggle('collapsed');
+            });
+        }
+    </script>
+</body>
+</html>

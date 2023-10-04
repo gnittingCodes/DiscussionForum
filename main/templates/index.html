@@ -1,0 +1,96 @@
+<style>
+.section-container {
+   display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.section-row {
+  display: flex;
+  margin-bottom: 20px;
+
+  justify-content: space-between;
+}
+
+.section-column {
+  flex: 1;
+  margin-left:100px;
+  margin-right: 100px;
+}
+
+.section-button {
+  display: block;
+  margin-bottom: 10px;
+  padding: 10px 20px;
+  background: linear-gradient(to bottom, #4CAF50, #2E8B57);
+  box-shadow: 0px 2px 3px rgba(0, 0, 0, 0.3);
+  color: white;
+  text-align: center;
+  text-decoration: none;
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  width: auto;
+}
+
+.section-button:hover {
+  background: linear-gradient(to bottom, #45a049, #2E8B57);
+
+}
+
+.section-button:active {
+  background: linear-gradient(to bottom, #3e8e41, #2E8B57);
+  box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.3);
+
+}
+</style>
+
+
+{% if username %}
+<h1> Welcome, {{ username }} </h1>
+{% else %}
+<h2> Welcome! Do <a href="/login">login</a> or <a href="/register">register</a> to access the pages!</h2>
+{% endif %}
+
+<div class="section-container">
+    <div class="section-row">
+      <!-- Section 1: Heading 1 -->
+      <div class="section-column">
+        <h2><i class="fas fa-cogs"></i> Administrations</h2>
+
+        <a class="section-button" href="/account">Account Settings</a>
+        <a class="section-button" href="/about">About Us</a>
+        <a class="section-button" href="/faq">FAQ Page</a>
+    </div>
+  
+      <!-- Section 2: Heading 2 -->
+      <div class="section-column">
+        <h2><i class="fas fa-book"style="margin-right:5px;"></i>Academics Resources</h2>
+        <a class="section-button" href="/knowledge-repository">Knowledge Repository</a>
+        <a class="section-button" href="/tutorial-notes">Tutorial Notes</a>
+        <a class="section-button" href="/course-guide">Course Guide</a>
+
+    </div>
+    </div>
+  
+    <div class="section-row">
+      <!-- Section 3: Heading 3 -->
+      <div class="section-column">
+        {% if username == "admin" %}
+        <h2><i class="fas fa-users"style="margin-right:5px;"></i>Users</h2>
+        <a class="section-button section-button-long" href="/admin-users">Users List</a>
+        {% else %}
+        
+        <h2><i class="fas fa-users" style="margin-right:5px;"></i>Socials</h2>
+        <a class="section-button" href="/friends">Friends List</a>
+        {% endif %}
+
+    </div>
+
+    <div class="section-column"></div>
+
+ 
+    </div>
+  </div>
+  

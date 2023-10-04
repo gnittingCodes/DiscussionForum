@@ -1,0 +1,195 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Bottle Chat</title>
+
+    <script src='https://code.jquery.com/jquery-1.6.4.min.js'></script>
+    <script src='js/chat.js'></script>
+
+    <style>
+        /* #chat * {
+            font-family: sans-serif;
+        }
+        
+        #chat .window {
+            padding: 0 0 1px 0;
+        }
+        #chat .timestamp {
+            border: 1px solid grey;
+            border-width: 0 0 1px 0;
+            text-align: right;
+        } */
+
+        
+        * body {
+            background-color: #f5f5f5;
+            font-family: Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        h2 {
+            text-align: center;
+        }
+
+        #chat {
+            max-width: 550px;
+            margin: 0 auto;
+            background-color: #f5f5f5;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            overflow: hidden;
+        }
+
+        #chat .window {
+            height: 300px;
+            overflow-y: auto;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            padding: 10px;
+            background-color: #fff;
+        }
+
+        #chat form {
+            display: flex;
+            align-items: center;
+            background-color: #fff;
+            border-radius: 10px;
+            padding: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        #chat label {
+            font-weight: bold;
+            margin-right: 10px;
+            color: #888;
+        }
+
+        #chat input[type="text"] {
+            flex-grow: 1;
+            padding: 8px;
+            border: none;
+            border-radius: 20px;
+            background-color: #f9f9f9;
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        #chat input[type="submit"] {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 20px;
+            padding: 8px 20px;
+            margin-left: 10px;
+            cursor: pointer;
+        }
+
+        #chat input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+
+        .message {
+            display: inline-flex;
+            flex-direction: row;
+            display: inline-block;
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-bottom: 10px;
+            width: max-content;
+            border-radius: 10px;
+            background-color: #007bff;
+            color: #fff;
+        }
+
+        .message .message-content {
+            display: flex;
+            align-items: center;
+        }
+      
+        .self {
+            background-color: #007bff;
+            color: #fff;
+            align-self: flex-end;
+        }
+
+        .other {
+            background-color: #f5f5f5;
+            color: #333;
+            align-self: flex-start;
+        }
+        
+        .timestamp {
+            text-align: right;
+            color: #888;
+            font-size: 12px;
+            margin-bottom: 10px;
+        } 
+      </style>
+
+</head>
+<body>
+    <h2>Friend: {{friend_name}}</h2>
+    <div id='chat'>
+        <div class='window' id='chat-window' style='overflow:auto; width:96%; height:300px; display: flex; flex-direction: column'>
+
+        <!-- <div class='window' style='overflow:auto; width:100%; height:300px;'> -->
+            <div style="height: 1000px"></div>
+        </div>
+
+
+        <br></br>
+        <form action='#'>
+            <label for='nick'>Name: {{username}}  </label><input type='hidden' value="{{username}}" name='nick' />
+            <input type='hidden' value="{{friend_name}}" name='friend_name' />
+            <label for='nick'>Message:</label><input type='text' name='text' />
+            <input type='submit' value='send'/>
+
+        </form>
+    </div>
+
+    <div style='display: none'>
+        <div id='tpl_message' class='message'>
+            <span class='nick'></span>:  <span class='text'></span>
+        </div>
+        <div id='tpl_timestamp' class='timestamp'>
+        </div>
+    </div>
+    
+
+
+
+    <script>
+
+
+    $(document).ready(function() {
+        $('#chat-window').scrollTop($('#chat-window')[0].scrollHeight);
+
+        $('#message-form').submit(function(event) {
+            event.preventDefault();
+
+            var message = $('input[name=text]').val();
+            $('input[name=text]').val('');
+
+            var nick = $('input[name=nick]').val();
+            var is_self = nick === "{{ username }}";
+            var message_class = is_self ? 'self' : 'other';
+
+            var $message = $('#tpl_message').clone().removeAttr('id').addClass(message_class);
+            $message.find('.nick').text(is_self ? 'Me' : "{{ friend_name }}");
+            $message.find('.text').text(message);
+
+            $('#chat-window').append($message);
+
+            // Scroll to the bottom of the chat window
+            $('#chat-window').scrollTop($('#chat-window')[0].scrollHeight);
+        });
+    });
+
+    </script>
+
+
+</body>
+</html>

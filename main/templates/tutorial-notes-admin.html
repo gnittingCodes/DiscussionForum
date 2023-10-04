@@ -1,0 +1,412 @@
+
+<link rel="stylesheet" type="text/css" href="css/tutorialnotes.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+<h1>Admin: Tutorial Notes</h1>
+
+<!-- <section class="admin-section">
+    
+    <h3>Admin Actions</h3>
+    
+    <div class="admin-buttons">
+        <a href="/add-note" class="admin-button admin-button-short">
+            <input type="button" value="Add new Note" class="admin-button-inner">
+        </a>
+        <br>
+        <a href="/delete-note" class="admin-button admin-button-short">
+            <input type="button" value="Delete a note" class="admin-button-inner">
+        </a>
+    </div>
+
+</section>   -->
+
+
+<style>
+  .edit-buttons {
+    display: flex;
+    gap: 8px;
+  }
+
+  .edit-buttons button {
+    background-color: #f1f1f1;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+  }
+
+  .edit-buttons button:hover {
+    background-color: #ddd;
+  }
+
+  .edit-buttons button:focus {
+    outline: none;
+  }
+
+  .popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 300px;
+    padding: 20px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    z-index: 9999;
+  }
+
+  .popup-content {
+    text-align: center;
+  }
+
+  .popup-buttons {
+    margin-top: 20px;
+    text-align: center;
+  }
+  .centered-input {
+    display: flex;
+    justify-content: center;
+  }
+</style>
+
+
+<section class="admin-section">
+  <div class="admin-buttons">
+
+    <div class="add-button-container">
+      <a href="/add-note" class="add-button"><i class="fas fa-plus" style="margin-right: 5px;"></i> Add Note</a>
+    </div>
+
+      <style>
+  
+      .add-button-container {
+        text-align: center;
+      }
+
+      .add-button {
+        padding: 8px 16px;
+        /* background-color: #007bff; */
+        background-color: #337ab7;
+        color: #fff;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+
+      .add-button:hover {
+        background-color: #0069d9;
+        
+      }
+      </style>
+
+  </div>
+</section> 
+
+{% set sections = {} %}
+{% for note in notes %}
+  {% if note.section_heading not in sections %}
+    {% set _ = sections.update({note.section_heading: [note]}) %}
+  {% else %}
+    {% set _ = sections[note.section_heading].append(note) %}
+  {% endif %}
+{% endfor %}
+
+{% for section_heading, section_notes in sections.items() %}
+  <section>
+    <h2 class="section-heading">{{ section_heading }}</h2>
+    <ul class="file-list">
+      {% for note in section_notes %}
+      <li class="file-item">
+        <a href="{{ note.file_link }}" download class="file-link">{{ note.file_name }}</a>
+        <div class="edit-buttons">
+          <button class="edit-link-button" data-note-id="{{ note.note_id }}"><i class="fas fa-edit" style="margin-right:5px;"></i> Edit Link</button>
+          <button class="edit-name-button" data-note-id="{{ note.note_id }}"><i class="fas fa-edit" style="margin-right:5px;"></i>Edit Name</button>
+          <button class="delete-button" data-note-id="{{ note.note_id }}"><i class="fas fa-trash" style="margin-right:5px;"></i>Delete Note</button>
+        </div>
+      </li>
+      {% endfor %}
+    </ul>
+  </section>
+{% endfor %}
+
+
+ 
+
+
+<!-- editing link -->
+<div class="popup" id="linkPopup" style="display: none;">
+    <div class="popup-content">
+      <h3>Edit Link</h3>
+      <p>Enter a new link:</p>
+      <input type="text" id="newLinkInput">
+    </div>
+    <div class="popup-buttons">
+      <button id="cancelButton">Cancel</button>
+      <button id="saveButton">Save</button>
+    </div>
+</div>
+
+
+<!-- editing name -->
+<div class="popup" id="namePopup" style="display: none;">
+    <div class="popup-content">
+      <h3>Edit Name</h3>
+      <p>Enter a new name:</p>
+      <input type="text" id="newNameInput">
+    </div>
+    <div class="popup-buttons">
+      <button id="cancelNameButton">Cancel</button>
+      <button id="saveNameButton">Save</button>
+    </div>
+</div>
+
+
+<!-- delete note -->
+
+<div class="popup" id="deletePopup" style="display: none;">
+  <div class="popup-content">
+    <h3>Confirm Delete</h3>
+    <p>Are you sure you want to delete this note?</p>
+  </div>
+  <div class="popup-buttons">
+    <button id="cancelDeleteButton">Cancel</button>
+    <button id="confirmDeleteButton">Delete</button>
+  </div>
+</div>
+
+<!-- add new note separate button -->
+<div class="popup" id="addPopup" style="display: none;">
+  <div class="popup-content">
+    <h3>Add New File</h3>
+    <p>Section Heading:</p>
+    <select id="sectionHeadingSelect" name="section_heading" onchange="toggleNewSectionHeadingInput()">
+      {% for section_heading in section_headings %}
+        <option value="{{ section_heading }}">{{ section_heading }}</option>
+      {% endfor %}
+      <option value="new">Create New Section Heading</option>
+    </select>
+    <div class="centered-input">
+    <input type="text" id="sectionHeadingInput" name="new_section_heading" style="display: none;">
+  </div>
+    <p>New File Name:</p>
+    <input type="text" id="newFileNameInput" name="new_file_name">
+    <p>New File Link:</p>
+    <input type="text" id="newFileLinkInput" name="new_file_link">
+  </div>
+  <div class="popup-buttons">
+    <button id="cancelAddButton">Cancel</button>
+    <button id="saveAddButton">Save</button>
+  </div>
+</div>
+
+
+
+  <script>
+    function toggleNewSectionHeadingInput() {
+      var selectElement = document.getElementById("sectionHeadingSelect");
+      var inputElement = document.getElementById("sectionHeadingInput");
+
+      if (selectElement.value === "new") {
+        inputElement.style.display = "block";
+      } else {
+        inputElement.style.display = "none";
+      }
+    }
+
+
+    // Add event listener to the "Edit Link" buttons
+    var editLinkButtons = document.querySelectorAll('.edit-link-button');
+
+    editLinkButtons.forEach(function(button) {
+      button.addEventListener('click', function(event) {
+        var noteId = event.target.getAttribute('data-note-id');
+        // Show the pop-up notification
+        var popup = document.getElementById('linkPopup');
+        popup.style.display = 'block';
+  
+        // Handle Cancel button click
+        var cancelButton = document.getElementById('cancelButton');
+        cancelButton.addEventListener('click', function() {
+          popup.style.display = 'none';
+        });
+  
+        // Handle Save button click
+        var saveButton = document.getElementById('saveButton');
+        saveButton.addEventListener('click', function() {
+          var newLink = document.getElementById('newLinkInput').value;
+          if (newLink) {
+            // Perform further actions with the new link
+            saveLink(newLink, noteId);
+            window.location.reload();
+          }
+          popup.style.display = 'none';
+        });
+      });
+    });
+
+
+    // save action for the link
+    function saveLink(newLink, noteId) {
+        // POST request to the desired URL for saving the link data
+        fetch('/save-link', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            link: newLink,
+            noteId: noteId,
+        }),
+        })
+    }
+
+
+    var editNameButtons = document.querySelectorAll('.edit-name-button');
+    editNameButtons.forEach(function(button) {
+        button.addEventListener('click', function(event) {
+        var noteId = event.target.getAttribute('data-note-id');
+        // editing name
+        var namePopup = document.getElementById('namePopup');
+        namePopup.style.display = 'block';
+
+        // cancel button click for name editing
+        var cancelNameButton = document.getElementById('cancelNameButton');
+        cancelNameButton.addEventListener('click', function() {
+            namePopup.style.display = 'none';
+        });
+
+        // save button click for name editing
+        var saveNameButton = document.getElementById('saveNameButton');
+        saveNameButton.addEventListener('click', function() {
+            var newName = document.getElementById('newNameInput').value;
+            if (newName) {
+              saveName(newName, noteId);
+              window.location.reload();
+            }
+            namePopup.style.display = 'none';
+        });
+        });
+    });
+
+
+  // Function to perform the save action for the name
+  function saveName(newName, noteId) {
+        // Make a POST request to the desired URL for saving the name data
+        fetch('/save-name', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            name: newName,
+            noteId: noteId,
+        }),
+        })
+       
+  }
+
+var addNoteButton = document.querySelector('.add-button');
+addNoteButton.addEventListener('click', function(event) {
+  event.preventDefault(); // Prevent the default navigation behavior
+
+  // Show the add new file pop-up
+  var addPopup = document.getElementById('addPopup');
+  addPopup.style.display = 'block';
+
+  var cancelNameButton = document.getElementById('cancelAddButton');
+    cancelNameButton.addEventListener('click', function() {
+      addPopup.style.display = 'none';
+    });
+
+  // Handle Save button click for adding a new file
+  var saveAddButton = document.getElementById('saveAddButton');
+    saveAddButton.addEventListener('click', function() {
+    var sectionHeadingSelect = document.getElementById('sectionHeadingSelect');
+    var sectionHeading;
+    
+    if (sectionHeadingSelect.value === 'new') {
+      // If "Create New Section Heading" is selected, retrieve the input text box value
+      var sectionHeadingInput = document.getElementById('sectionHeadingInput');
+      sectionHeading = sectionHeadingInput.value;
+    } else {
+      // If an existing section heading is selected, retrieve the selected value
+      sectionHeading = sectionHeadingSelect.value;
+    }
+    
+    var newFileName = document.getElementById('newFileNameInput').value;
+    var newFileLink = document.getElementById('newFileLinkInput').value;
+    
+    if (sectionHeading && newFileName && newFileLink) {
+      addNewFile(sectionHeading, newFileName, newFileLink);
+      window.location.reload();
+    }
+    
+    addPopup.style.display = 'none';
+  });
+
+
+});
+
+  // Function to perform the save action for adding a new file
+  function addNewFile(sectionHeading, newFileName, newFileLink) {
+    // Make a POST request to the desired URL for adding a new file
+    fetch('/new-note', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        sectionHeading: sectionHeading,
+        newFileName: newFileName,
+        newFileLink: newFileLink,
+      }),
+    })
+  }
+
+
+  var deleteButtons = document.querySelectorAll('.delete-button');
+  deleteButtons.forEach(function(button) {
+      button.addEventListener('click', function(event) {
+        var noteId = event.target.getAttribute('data-note-id');
+        // Show the delete confirmation popup
+        var popup = document.getElementById('deletePopup');
+        popup.style.display = 'block';
+
+        // Handle Cancel button click
+        var cancelButton = document.getElementById('cancelDeleteButton');
+        cancelButton.addEventListener('click', function() {
+          popup.style.display = 'none';
+        });
+
+        // Handle Delete button click
+        var deleteButton = document.getElementById('confirmDeleteButton');
+        deleteButton.addEventListener('click', function() {
+          // Perform delete action
+          deleteNote(noteId);
+          window.location.reload();
+          popup.style.display = 'none';
+        });
+      });
+    });
+
+
+    function deleteNote(noteId) {
+        // POST request to the desired URL for saving the link data
+        fetch('/delete-note', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            noteId: noteId
+        }),
+        })
+    }
+
+
+
+</script>
+

@@ -1,0 +1,70 @@
+
+<body>
+    <h1>Add a new post</h1>
+    <div class="new-post">
+        <form id="post" method="post" action="/post">
+        <fieldset>
+            <div class="post-title">
+                <label for="title">Post Title:</label>
+                <input 
+                    type="text"
+                    id="title"
+                    name="title"
+                    placeholder="Enter a title"
+                    required
+                />
+            </div>
+            
+            <div class="post-message">
+                <label for="message">Post Message:</label>
+                <textarea
+                    name="message"
+                    id="message"
+                    cols="50"
+                    rows="15"
+                    placeholder="Enter your message"
+                    required
+                ></textarea>
+            </div>
+            <input type="submit" value="Add post">
+        </fieldset>
+        </form>
+    </div>
+    
+
+    <style>
+        .new-post {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .post-title {
+            margin-bottom: 10px;
+        }
+
+        #submit-btn {
+            margin: 10px;
+        }
+
+        input {
+            width: 100%;
+            padding: 5px;
+            font-family: sans-serif;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 5px;
+            outline: none;
+            resize: none;
+            font-family: sans-serif;
+        }
+
+        fieldset {
+            padding: 20px 40px;
+            border: none;
+        }
+    </style>
+
+</body>

@@ -1,0 +1,98 @@
+<!-- <body> -->
+  <h1>Welcome, {{ username }}</h1>
+
+  <div class="friends-list-container">
+    <p>Friends List</p>
+    <table>
+      <thead>
+        <tr>
+          <!-- <th>Friend ID</th> -->
+          <th>Friend Name</th>
+          <th>Click to Chat</th>
+        </tr>
+      </thead>
+
+        <tbody id="friends-section">
+        {% for friend in friend_list %}
+        <tr>
+          <form method="POST" action="/chat">
+
+
+            <td>{{ friend.friend_name }}</td>
+
+            <td>
+              <input
+                type="hidden"
+                name="friend_id"
+                value="{{ friend.friend_id }}"
+              />
+              <input type="hidden" name="user_id" value="{{ user_id }}" />
+
+              <button type="submit" class="chat-button">
+                <i class="fas fa-comment"></i> Chat
+              </button>
+            </td>
+          </form>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <style>
+
+.chat-button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  font-size: 13px;
+}
+.chat-button:hover {
+  background-color: #0056b3;
+}
+
+.chat-button i {
+  margin-right: 5px;
+}
+    h1 {
+      font-size: 24px;
+      font-weight: bold;
+      margin-top: 20px;
+      margin-bottom: 20px;
+      padding: 30px;
+    }
+
+    table {
+      border-collapse: collapse;
+      margin: 0 auto;
+      width: 80%; 
+    }
+
+    th,
+    td {
+      border: 1px solid rgb(0, 0, 0);
+      padding: 10px;
+      text-align: center;
+      font-size: 16px;
+      font-weight: bold;
+      transition: background-color 0.2s ease;
+    }
+
+    th {
+      /* background-color: #2f6a8f; baby blue */
+      background-color: #337ab7;
+      color: white;
+      font-weight: bold;
+    }
+
+    .friends-list-container {
+      text-align: center;
+    }
+
+    nav ul ul.show {
+      display: block;
+    }
+  </style>
+

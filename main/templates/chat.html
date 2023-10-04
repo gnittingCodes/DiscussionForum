@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Chat with {{ friend_name }}</title>
+
+    <style>
+      #chat * {
+        font-family: sans-serif;
+      }
+      
+      #chat .window {
+          padding: 0 0 1px 0;
+      }
+      
+      #chat .timestamp {
+          border: 1px solid grey;
+          border-width: 0 0 1px 0;
+          text-align: right;
+      }
+    </style>
+<!-- 
+<script>
+  function scrollToBottom() {
+    const messageContainer = document.getElementById('message-container');
+    messageContainer.scrollTop = messageContainer.scrollHeight;
+  }
+</script> -->
+
+  </head>
+  <body>
+
+    <!-- <h1>{{ username }} is chatting with {{ friend_name }}</h1> -->
+
+    <div id="message-container">
+      {% for message in messages %}
+      <div class="message {% if message.sender == 'You' %}sent{% else %}received{% endif %}">
+        <p>{{ message.content }}</p>
+        <p>{{ message.timestamp }}</p>
+        {% if message.sender != 'You' %}
+            <p>From: {{ message.sender }}</p>
+        {% endif %}
+    </div>
+
+      {% endfor %}
+    
+      <form id="message-form" method="POST" action="/chat">
+        <input type="hidden" name="user_id" value="{{ user_id }}">
+        <input type="hidden" name="friend_id" value="{{ friend_id }}">
+        <input type="text" name="message" placeholder="Type your message here">
+        <button type="submit">Send</button>
+      </form>
+    </div>
+
+    <script>
+      // Call scrollToBottom after new messages are added
+      // scrollToBottom();
+      function scrollToBottom() {
+      const messageContainer = document.getElementById('message-container');
+      messageContainer.scrollTop = messageContainer.scrollHeight;
+    }
+
+    // Scroll to the bottom periodically
+    setInterval(scrollToBottom, 100);
+    </script>
+
+
+  </body>
+</html>

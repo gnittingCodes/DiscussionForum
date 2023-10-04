@@ -1,0 +1,119 @@
+
+<style>
+    /* .container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    } */
+
+    .form-container {
+        display: inline-block; 
+        max-width: 400px; 
+        max-height: 400px; 
+        overflow: auto; 
+        padding: 20px;
+        border: 2px solid #ccc;
+        border-radius: 10px;
+    }
+
+    .input-container {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+        max-width: 200%;
+    }
+
+    label {
+        flex: 0 0 200px;
+    }
+
+    input[type="text"],
+    input[type="password"] {
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 16px;
+        width: 100%;
+        outline: none;
+    }
+
+
+    input[type="submit"] {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+        background-color: #277598;
+        color: #fff;
+        cursor: pointer;
+    }
+
+    input[type="submit"]:hover {
+        /* background-color: #45a049; */
+        background-color: #23527c;
+
+    }
+    .input-container-register {
+        padding-left: 30px;
+    }
+    .error-message {
+        background-color: #F8D7DA;
+        color: #721C24;
+        border: 1px solid #F5C6CB;
+
+        margin: 10px auto; 
+        padding: 10px;
+        border-radius: 5px;
+        width: fit-content;
+        text-align: center; 
+    }
+    .existing-account-message {
+        margin-top: 10px;
+        font-size: 14px;
+
+    }
+</style>
+   
+<!-- <center> -->
+<h1>USYD's CS Website Register</h1>
+
+<div class="container">
+
+    <div class="form-container">
+        <form action="/register" method="post">
+            <div class="input-container">
+                <label for="username">Enter a username:</label>
+                <input id="username" name="username" type="text" />
+            </div>
+
+            <div class="input-container">
+                <label for="password">Create a password:</label>
+                <input id="password" name="password" type="password" />
+            </div>
+
+            <div class="input-container">
+                <label for="password_confirm">Confirm your password:</label>
+                <input id="password_confirm" name="password_confirm" type="password" />
+            </div>
+
+            <div class="input-container-register">
+                <input value="Register" type="submit" />
+            </div>
+
+            {% if error_message %}
+                <div class="error-message">
+                    {{ error_message }}
+                </div>
+            {% endif %}
+
+        </form>
+
+
+        <div class="existing-account-message">
+            Have an existing account? <a href="/login">Login here</a>.
+        </div>
+    
+    </div>
+    
+
+</div>
